@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mexico City — March 13–18</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf6ef;
+    --terracotta: #c5522a;
+    --terracotta-light: #e8734a;
+    --deep: #1a1209;
+    --gold: #d4a843;
+    --green: #3a5c3a;
+    --muted: #8a7a68;
+    --card: #fff9f2;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--deep);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+  }
+
+  /* Header */
+  .hero {
+    background: var(--deep);
+    color: var(--cream);
+    padding: 60px 40px 50px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 40px,
+      rgba(196,82,42,0.06) 40px,
+      rgba(196,82,42,0.06) 41px
+    );
+  }
+  .hero-inner { position: relative; max-width: 860px; margin: 0 auto; }
+  .hero-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--terracotta-light);
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 7vw, 82px);
+    line-height: 0.95;
+    font-weight: 700;
+    letter-spacing: -1px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--terracotta-light);
+  }
+  .hero-dates {
+    margin-top: 20px;
+    font-size: 14px;
+    color: rgba(250,246,239,0.6);
+    letter-spacing: 1px;
+  }
+  .hero-flags { font-size: 22px; margin-top: 8px; }
+
+  /* Nav tabs */
+  .tabs-wrap {
+    background: var(--deep);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 0 40px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs-wrap::-webkit-scrollbar { display: none; }
+  .tabs {
+    display: flex;
+    gap: 0;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .tab-btn {
+    background: none;
+    border: none;
+    color: rgba(250,246,239,0.45);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 16px 18px;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .tab-btn:hover { color: var(--cream); }
+  .tab-btn.active {
+    color: var(--terracotta-light);
+    border-bottom-color: var(--terracotta-light);
+  }
+
+  /* Main content */
+  .main { max-width: 860px; margin: 0 auto; padding: 40px 40px 80px; }
+
+  .day-panel { display: none; }
+  .day-panel.active { display: block; }
+
+  /* Day header */
+  .day-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(26,18,9,0.1);
+  }
+  .day-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 72px;
+    font-weight: 700;
+    color: rgba(196,82,42,0.12);
+    line-height: 1;
+  }
+  .day-info h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 400;
+  }
+  .day-info .date-tag {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .day-info .theme {
+    display: inline-block;
+    margin-top: 8px;
+    background: var(--terracotta);
+    color: white;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 2px;
+  }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--terracotta), rgba(196,82,42,0.1));
+  }
+
+  .event {
+    position: relative;
+    margin-bottom: 24px;
+    animation: fadeUp 0.4s ease both;
+  }
+  .event::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 10px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    border: 2px solid var(--cream);
+    box-shadow: 0 0 0 1px var(--terracotta);
+  }
+
+  .event-card {
+    background: var(--card);
+    border: 1px solid rgba(26,18,9,0.07);
+    border-radius: 8px;
+    padding: 16px 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .event-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    transform: translateY(-1px);
+  }
+
+  .event-time {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .event-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+  .event-desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #5a4d3e;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-right: 5px;
+    margin-top: 8px;
+    font-weight: 500;
+  }
+  .tag-food { background: #fdebd0; color: #7d4e0a; }
+  .tag-museum { background: #d6e9d6; color: #1e4d1e; }
+  .tag-walk { background: #d9e8f5; color: #1a3e5c; }
+  .tag-tip { background: #fce8e8; color: #7d1a1a; }
+  .tag-night { background: #1a1209; color: #ffd580; }
+  .tag-excursion { background: #e8e0f5; color: #3d1a6e; }
+
+  /* Alert box */
+  .alert {
+    background: rgba(212,168,67,0.12);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 16px;
+    margin-bottom: 28px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #5a4510;
+  }
+  .alert strong { font-weight: 500; }
+
+  /* Quick lists */
+  .quick-list {
+    background: var(--deep);
+    color: var(--cream);
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin-top: 28px;
+  }
+  .quick-list h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-style: italic;
+    margin-bottom: 14px;
+    color: var(--gold);
+  }
+  .quick-list ul { list-style: none; }
+  .quick-list li {
+    font-size: 13px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    line-height: 1.5;
+  }
+  .quick-list li:last-child { border: none; }
+  .quick-list li::before {
+    content: '→';
+    color: var(--terracotta-light);
+    flex-shrink: 0;
+    font-size: 11px;
+  }
+
+  /* Divider label */
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 28px 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(26,18,9,0.1);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .hero { padding: 40px 20px 36px; }
+    .main { padding: 28px 20px 60px; }
+    .tabs-wrap { padding: 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">Travel Itinerary</div>
+    <h1>Ciudad de<br><em>México</em></h1>
+    <div class="hero-dates">March 13 – 18, 2026 &nbsp;·&nbsp; 6 Days</div>
+    <div class="hero-flags">🇲🇽</div>
+  </div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showDay('d1')">Fri 13</button>
+    <button class="tab-btn" onclick="showDay('d2')">Sat 14</button>
+    <button class="tab-btn" onclick="showDay('d3')">Sun 15</button>
+    <button class="tab-btn" onclick="showDay('d4')">Mon 16</button>
+    <button class="tab-btn" onclick="showDay('d5')">Tue 17</button>
+    <button class="tab-btn" onclick="showDay('d6')">Wed 18</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- DAY 1: Friday March 13 -->
+  <div class="day-panel active" id="d1">
+    <div class="day-header">
+      <div class="day-number">1</div>
+      <div class="day-info">
+        <h2>Arrival Day</h2>
+        <div class="date-tag">Friday, March 13</div>
+        <span class="theme">✈️ Land 4:40 PM · Settle In · First Dinner</span>
+      </div>
+    </div>
+    <div class="alert">
+      <strong>✈️ Flight lands 4:40 PM.</strong> Allow ~1 hr through immigration/baggage + ~45 min to an hour to reach Roma/Condesa by Uber (traffic can be heavy at rush hour). You'll be at your accommodation by ~7pm. Keep tonight easy — explore on foot and eat well.
+    </div>
+    <div class="timeline">
+      <div class="event"><div class="event-card">
+        <div class="event-time">4:40 PM</div>
+        <div class="event-title">Land at Aeropuerto Internacional Benito Juárez (MEX)</div>
+        <div class="event-desc">Use <strong>Uber or Didi</strong> from the airport — do not take unmarked taxis. Open the app before leaving arrivals. Expect 45–60 min to Roma/Condesa depending on traffic.</div>
+        <span class="tag tag-tip">Uber/Didi only — no unmarked taxis</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">~6:30 – 7:30 PM</div>
+        <div class="event-title">Check in & freshen up</div>
+        <div class="event-desc">Drop bags, get your bearings. If staying in Roma or Condesa, step outside — the neighborhood is immediately walkable and charming.</div>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">7:30 – 8:30 PM</div>
+        <div class="event-title">First walk — Avenida Ámsterdam</div>
+        <div class="event-desc">The oval tree-lined boulevard looping around Parque México is one of the prettiest evening walks in the city. Get your first feel for the neighborhood, watch locals, grab a coffee at <strong>Ritmo Café</strong> with its hidden back garden.</div>
+        <span class="tag tag-walk">Walk</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">8:30 PM onwards</div>
+        <div class="event-title">Welcome dinner</div>
+        <div class="event-desc">Ease in with something nearby and excellent: <strong>Maizajo</strong> (Condesa — extraordinary tacos, try the guava mole taco), <strong>Barra Lupe</strong> (Roma Norte, casual and delicious), or <strong>Santo Spirito</strong> (Roma Norte, relaxed Italian-Mexican). Save the big reservations for later nights.</div>
+        <span class="tag tag-food">Dinner</span>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- DAY 2: Saturday March 14 -->
+  <div class="day-panel" id="d2">
+    <div class="day-header">
+      <div class="day-number">2</div>
+      <div class="day-info">
+        <h2>San Ángel · Coyoacán · UNAM</h2>
+        <div class="date-tag">Saturday, March 14</div>
+        <span class="theme">Bazar Sábado · Anahuacalli / Casa Azul · Coyoacán · Jardines UNAM</span>
+      </div>
+    </div>
+    <div class="alert">
+      <strong>📍 Southern corridor day:</strong> San Ángel → Coyoacán → UNAM — all flow south with no backtracking. One Frida Kahlo ticket covers Anahuacalli too (10 min apart). Book Frida Kahlo timed entry weeks in advance — <strong>no walk-in sales</strong>.
+    </div>
+    <div class="timeline">
+      <div class="event"><div class="event-card">
+        <div class="event-time">9:00 – 9:30 AM</div>
+        <div class="event-title">Breakfast in San Ángel</div>
+        <div class="event-desc">Coffee and pastry at <strong>San Ángel Inn</strong> in its hacienda courtyard, or grab something quick near <strong>Plaza del Carmen</strong> before the Bazar opens.</div>
+        <span class="tag tag-food">Breakfast</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">10:00 AM – 12:00 PM</div>
+        <div class="event-title">Bazar Sábado</div>
+        <div class="event-desc">Mexico's most famous Saturday artisan market — held in a stunning 17th-century colonial mansion. Textiles, hand-painted ceramics, silver jewellery, folk art from every region. <strong>Saturday only, indoors and outdoors.</strong> Browse <strong>Plaza del Carmen</strong> stalls afterward and peek inside <strong>Museo del Carmen</strong> — a former convent with extraordinary cloister gardens and mummified monks in the crypt.</div>
+        <span class="tag tag-walk">Market</span><span class="tag tag-tip">Saturday only</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">12:30 – 1:30 PM</div>
+        <div class="event-title">Lunch at Mercado Coyoacán</div>
+        <div class="event-desc">Uber to Coyoacán (~15 min). The covered market is alive on Saturdays — tostadas, quesadillas, enfrijoladas. Find <strong>Carmelita's stall</strong> for the classic tostadas. Browse the chocolate tasting section and the homemade banana chip stands.</div>
+        <span class="tag tag-food">Lunch</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">1:30 – 2:30 PM</div>
+        <div class="event-title">Coyoacán — Plaza Hidalgo & cobblestone streets</div>
+        <div class="event-desc">Wander the colonial neighbourhood on foot. <strong>Plaza Hidalgo</strong> and <strong>Jardín Centenario</strong> are full of street musicians, artisan stalls, and local families on Saturdays. Stop at <strong>Café Avellaneda</strong> for a coffee before the museums.</div>
+        <span class="tag tag-walk">Neighbourhood</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">2:45 – 4:15 PM</div>
+        <div class="event-title">Anahuacalli Museum or Casa Azul (Museum 1)</div>
+        <div class="event-desc"><strong>Anahuacalli</strong> — Diego Rivera's extraordinary volcanic-stone pyramid, built to house his 50,000-piece pre-Hispanic art collection. The building itself is a masterpiece: Mesoamerican architecture fused with lava rock, rooftop views over Pedregal. Opens 11am, closes 5:30pm. Or begin with <strong>Casa Azul</strong> (Frida Kahlo) — timed entry, book ahead at museofridakahlo.org.mx. One ticket covers both.</div>
+        <span class="tag tag-museum">Museum</span><span class="tag tag-tip">Book Frida Kahlo NOW — no walk-ins</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">4:30 – 5:30 PM</div>
+        <div class="event-title">The second museum</div>
+        <div class="event-desc">Whichever you didn't do first — <strong>Casa Azul</strong> (Frida's blue home, her clothing, paintings, personal objects, kitchen and garden) or <strong>Anahuacalli</strong>. Only 10 min apart by Uber. Your Frida Kahlo ticket is valid for both — no extra charge.</div>
+        <span class="tag tag-museum">Museum</span><span class="tag tag-tip">1 ticket covers both</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">6:00 – 7:30 PM</div>
+        <div class="event-title">UNAM — Jardines & Biblioteca Central</div>
+        <div class="event-desc">Uber south to <strong>Ciudad Universitaria</strong>. The <strong>Jardín Botánico UNAM</strong> covers 16 hectares of native Mexican plants, cacti, and volcanic rock gardens — free and open late on weekends. Then walk to the <strong>Biblioteca Central</strong>: its four facades are covered in Juan O'Gorman's monumental mosaic murals depicting all of Mexican history. One of the most photographed buildings in the world.</div>
+        <span class="tag tag-walk">Gardens · Architecture</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">8:30 PM onwards</div>
+        <div class="event-title">Dinner: Pujol</div>
+        <div class="event-desc"><strong>Pujol</strong> (Polanco) — one of the world's great restaurants. Reserve weeks ahead at pujol.com.mx. The <strong>DEGUSTACIÓN</strong> tasting menu is ~$130/person. The <strong>OMAKASE</strong> taco bar is more casual and slightly easier to book. Walk Av. Masaryk after dinner.</div>
+        <span class="tag tag-food">Dinner</span><span class="tag tag-tip">Reserve NOW at pujol.com.mx</span>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- DAY 3: Sunday March 15 -->
+  <div class="day-panel" id="d3">
+    <div class="day-header">
+      <div class="day-number">3</div>
+      <div class="day-info">
+        <h2>Jardines de México & Cuernavaca</h2>
+        <div class="date-tag">Sunday, March 15</div>
+        <span class="theme">Full Day Excursion · World's Largest Flower Gardens · City of Eternal Spring</span>
+      </div>
+    </div>
+    <div class="alert">
+      <strong>🌸 Early start required.</strong> Jardines de México is ~1.5 hrs south of CDMX, and Cuernavaca is a further ~30 min. Both are in the same direction — leave by 7am, arrive at the gardens near opening. Jardines is <strong>closed Mondays</strong>. Buy tickets in advance at jardinesdemexico.com.
+    </div>
+    <div class="timeline">
+      <div class="event"><div class="event-card">
+        <div class="event-time">6:45 – 7:00 AM</div>
+        <div class="event-title">Depart — coffee & pastry to go</div>
+        <div class="event-desc">Pick up breakfast from a nearby café the night before or grab from <strong>Buna</strong> or <strong>Cupido Coffee</strong> on your way out. Long drive ahead — get on the road early.</div>
+        <span class="tag tag-food">Breakfast</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">9:00 AM – 12:30 PM</div>
+        <div class="event-title">Jardines de México</div>
+        <div class="event-desc">The world's largest flower gardens — 126 acres and seven themed gardens: Japanese, Italian, Tropical, Cactus (200+ species), Aquatic, Herbal, and the mesmerising <strong>Labyrinth of the Senses</strong>. A contemporary art walk winds through the entire grounds. Wear comfortable shoes, bring water — the on-site café is overpriced. An internal shuttle (~50 pesos) covers more ground if you're tired. March is peak season for blooms.</div>
+        <span class="tag tag-walk">Gardens</span><span class="tag tag-tip">Closed Mondays · buy tickets online</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">1:00 – 2:00 PM</div>
+        <div class="event-title">Lunch in Tequesquitengo</div>
+        <div class="event-desc">Skip the gardens' restaurant — drive 10 min to the lake town of <strong>Tequesquitengo</strong> for a proper lakeside lunch at much better prices. Then continue south toward Cuernavaca (~30 min).</div>
+        <span class="tag tag-food">Lunch</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">2:45 – 5:30 PM</div>
+        <div class="event-title">Cuernavaca — City of Eternal Spring</div>
+        <div class="event-desc">One of Mexico's most beautiful colonial cities, set at 1,500m with warm year-round weather and lush gardens everywhere. Walk the <strong>Zócalo</strong>, visit the <strong>Palacio de Cortés</strong> (Diego Rivera murals inside, free), and stroll to <strong>Jardín Borda</strong> — an 18th-century estate garden with fountains and tropical plants. The colonial architecture is stunning.</div>
+        <span class="tag tag-excursion">Day Trip</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">6:00 – 7:30 PM</div>
+        <div class="event-title">Early dinner in Cuernavaca, then return</div>
+        <div class="event-desc">Eat in Cuernavaca before the drive back — the city has a good restaurant scene, especially around the Zócalo. Then ~1.5 hrs back to CDMX, easy on a Sunday evening with lighter traffic.</div>
+        <span class="tag tag-food">Dinner</span>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- DAY 4: Monday March 16 -->
+  <div class="day-panel" id="d4">
+    <div class="day-header">
+      <div class="day-number">4</div>
+      <div class="day-info">
+        <h2>Centro Histórico</h2>
+        <div class="date-tag">Monday, March 16</div>
+        <span class="theme">Downtown Tour · Bellas Artes · Zócalo · Biblioteca Vasconcelos</span>
+      </div>
+    </div>
+    <div class="alert">
+      <strong>⚠️ Monday:</strong> Most major museums are closed (Chapultepec, Anthropology, Frida Kahlo). Perfect day for Centro Histórico — the Zócalo, Palacio Nacional, Templo Mayor, Bellas Artes, and Biblioteca Vasconcelos are all open.
+    </div>
+    <div class="timeline">
+      <div class="event"><div class="event-card">
+        <div class="event-time">8:30 – 9:30 AM</div>
+        <div class="event-title">Breakfast — Café de Tacuba or Panadería Rosetta</div>
+        <div class="event-desc"><strong>Café de Tacuba</strong> (1912, stunning tiled dining room, right in Centro) for a full Mexican breakfast. Or grab a guava roll and cinnamon bun from <strong>Panadería Rosetta</strong> on the way.</div>
+        <span class="tag tag-food">Breakfast</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">9:30 – 11:00 AM</div>
+        <div class="event-title">Palacio de Bellas Artes</div>
+        <div class="event-desc">One of the most beautiful buildings in Latin America — white Carrara marble with an art nouveau exterior and art deco interior. Inside: Diego Rivera's most important murals (including <em>Man, Controller of the Universe</em>), plus rotating contemporary exhibitions. The <strong>Torre Latinoamericana</strong> is right next door — take the lift to the 44th floor for a 360° panorama of the city.</div>
+        <span class="tag tag-museum">Architecture · Murals</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">11:00 AM – 11:45 AM</div>
+        <div class="event-title">Alameda Central & Palacio Postal</div>
+        <div class="event-desc">Stroll through <strong>Alameda Central</strong> — CDMX's oldest public park (1592), full of jacaranda trees in March. Walk five minutes to the <strong>Palacio Postal</strong>: the most jaw-dropping post office in the world — gilded Venetian staircases, ornate brass fittings, free to enter and photograph.</div>
+        <span class="tag tag-walk">Walk</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">12:00 – 1:30 PM</div>
+        <div class="event-title">Zócalo & Palacio Nacional</div>
+        <div class="event-desc">The enormous Plaza de la Constitución — political heart of Mexico since Aztec times, ringed by the <strong>Catedral Metropolitana</strong> (largest in the Americas) and government palaces. Walk straight into the <strong>Palacio Nacional</strong> (free) for Diego Rivera's breathtaking mural cycle wrapping the entire main stairwell — the full history of Mexico in paint.</div>
+        <span class="tag tag-walk">Historic Centre</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">1:30 – 2:30 PM</div>
+        <div class="event-title">Templo Mayor & lunch</div>
+        <div class="event-desc">The excavated ruins of the great Aztec temple, discovered in 1978 when electrical workers hit a stone disc. Ancient pyramid foundations sitting metres from the Colonial Cathedral — one of the great urban archaeological sites. The adjacent <strong>Museo del Templo Mayor</strong> has superb artefacts. Grab a torta or tacos from stalls along the streets of Centro for lunch.</div>
+        <span class="tag tag-museum">Ruins</span><span class="tag tag-food">Lunch</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">3:30 – 5:00 PM</div>
+        <div class="event-title">Biblioteca Vasconcelos</div>
+        <div class="event-desc">Mexico's extraordinary "megalibrary" — books float on enormous suspended shelves in a vast glass-and-steel atrium that echoes like a cathedral. There's a giant whale skeleton sculpture hanging inside. Located in Buenavista, a short metro ride or Uber from Centro. Free entry. One of the most remarkable spaces in CDMX.</div>
+        <span class="tag tag-walk">Architecture</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">7:30 PM onwards</div>
+        <div class="event-title">Dinner in Roma Norte</div>
+        <div class="event-desc"><strong>Contramar</strong> (tuna tostadas, grilled whole fish — arrive 30 min before opening), <strong>Masala y Maiz</strong> (Mexican-Indian fusion), or <strong>Rosetta</strong>. Finish with cocktails at <strong>Licorería Limantour</strong> (4th best bar in the world — reserve ahead).</div>
+        <span class="tag tag-food">Dinner</span><span class="tag tag-night">Nightlife</span>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- DAY 5: Tuesday March 17 -->
+  <div class="day-panel" id="d5">
+    <div class="day-header">
+      <div class="day-number">5</div>
+      <div class="day-info">
+        <h2>Chapultepec & Antropología</h2>
+        <div class="date-tag">Tuesday, March 17</div>
+        <span class="theme">Castillo de Chapultepec · Bosque · Museo de Antropología · Reforma</span>
+      </div>
+    </div>
+    <div class="alert">
+      <strong>⚡ Book Chapultepec Castle online</strong> to skip the 2-hr walk-up queue. The castle sits at the top of a 20-min uphill walk from the park entrance — arrive by 8:45am. <strong>No water or food allowed inside the castle.</strong>
+    </div>
+    <div class="timeline">
+      <div class="event"><div class="event-card">
+        <div class="event-time">8:00 – 8:30 AM</div>
+        <div class="event-title">Breakfast — Panadería Rosetta</div>
+        <div class="event-desc">The most iconic bakery in CDMX — guava roll and cinnamon bun. Pink facade on Calle Colima in Roma Norte, ~10 min Uber from Chapultepec. Arrive early as the lines form fast.</div>
+        <span class="tag tag-food">Breakfast</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">9:00 – 11:30 AM</div>
+        <div class="event-title">Castillo de Chapultepec</div>
+        <div class="event-desc">The only royal castle in North America — imperial residence of Maximilian I and Carlota, then Mexico's presidents, now the <strong>National Museum of History</strong>. Extraordinary stained-glass galleries, Diego Rivera murals, imperial apartments preserved in full. Panoramic views over the entire city from the terraces. Budget 2–2.5 hrs. March often brings early jacaranda blooms on the hillside.</div>
+        <span class="tag tag-museum">Castle · Museum</span><span class="tag tag-tip">No water/food inside · book online</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">11:30 AM – 12:15 PM</div>
+        <div class="event-title">Walk Bosque de Chapultepec</div>
+        <div class="event-desc">Descend through one of the world's largest urban parks — lakes, vendors, families, rowboats. The Museo de Antropología is about 15 min on foot through the park from the castle. Grab a snack from a street stall on the way.</div>
+        <span class="tag tag-walk">Park</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">12:15 – 1:15 PM</div>
+        <div class="event-title">Lunch near the park</div>
+        <div class="event-desc"><strong>Lardo</strong> (Condesa, 10 min Uber — excellent brunch plates) or tacos from a stand at the park edge. You need energy for 3 hours in the world's greatest pre-Columbian museum.</div>
+        <span class="tag tag-food">Lunch</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">1:30 – 5:00 PM</div>
+        <div class="event-title">Museo Nacional de Antropología</div>
+        <div class="event-desc">One of the greatest museums on Earth — 22 rooms of pre-Columbian civilisation across a vast courtyard complex. The <strong>Aztec Sun Stone</strong> (Piedra del Sol), towering Olmec heads, Mayan jade burial masks, Xochipilli statues, Monte Albán tomb replicas. Give yourself a minimum 3 hours. English translations throughout. The giant umbrella pillar at the centre of the courtyard is iconic.</div>
+        <span class="tag tag-museum">Museum</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">5:30 – 6:30 PM</div>
+        <div class="event-title">Walk Paseo de la Reforma → Ángel de la Independencia</div>
+        <div class="event-desc">Stroll the grand Hausmann-style boulevard at golden hour, past the towering golden <strong>Ángel de la Independencia</strong>. One of the great evening city walks anywhere in the world.</div>
+        <span class="tag tag-walk">Walk</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">7:30 PM onwards</div>
+        <div class="event-title">Last big dinner</div>
+        <div class="event-desc">Use whatever's still on the list: <strong>Contramar</strong> if you haven't been (tuna tostadas, whole fish), <strong>Maizajo</strong> for the guava mole taco, or <strong>Mi Compa Chava</strong> for the famous raw seafood tower. End at <strong>Churrería El Moro</strong> for churros — open 24 hrs, never a bad idea.</div>
+        <span class="tag tag-food">Dinner</span>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- DAY 6: Wednesday March 18 -->
+  <div class="day-panel" id="d6">
+    <div class="day-header">
+      <div class="day-number">6</div>
+      <div class="day-info">
+        <h2>Morning & Departure</h2>
+        <div class="date-tag">Wednesday, March 18</div>
+        <span class="theme">✈️ Flight out at 12:00 PM — early morning only</span>
+      </div>
+    </div>
+    <div class="alert">
+      <strong>✈️ Flight departs 12:00 PM.</strong> You need to be at the airport by <strong>10:00 AM</strong> at the latest (earlier is safer). That means leaving your accommodation by <strong>8:45 – 9:00 AM</strong> max, accounting for rush-hour traffic. Keep this morning very light — just breakfast nearby and pack the night before.
+    </div>
+    <div class="timeline">
+      <div class="event"><div class="event-card">
+        <div class="event-time">7:00 – 8:00 AM</div>
+        <div class="event-title">Final breakfast nearby</div>
+        <div class="event-desc">Stay close to your accommodation — a quick coffee and pastry from a nearby café. <strong>Buna</strong>, <strong>Cupido Coffee</strong>, or any corner café in Roma/Condesa. Pack bags the night before so you're not rushing.</div>
+        <span class="tag tag-food">Breakfast</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">8:45 – 9:00 AM</div>
+        <div class="event-title">Depart for airport via Uber/Didi</div>
+        <div class="event-desc">Allow <strong>45–60 min</strong> to MEX airport from Roma/Condesa in morning traffic. Don't cut it close — Wednesday morning rush can be slow. Open Uber before you leave and check estimated time.</div>
+        <span class="tag tag-tip">Leave by 9:00 AM at the latest</span>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">10:00 AM</div>
+        <div class="event-title">Arrive at airport</div>
+        <div class="event-desc">Check in, clear security, browse the duty-free for any last-minute mezcal or chocolate. Terminal 1 and 2 are separate buildings — confirm which terminal your airline uses.</div>
+      </div></div>
+      <div class="event"><div class="event-card">
+        <div class="event-time">12:00 PM</div>
+        <div class="event-title">✈️ Depart Mexico City</div>
+        <div class="event-desc">Adiós, CDMX 🇲🇽</div>
+      </div></div>
+    </div>
+
+    <div class="quick-list">
+      <h3>What to grab before you leave</h3>
+      <ul>
+        <li>Churros from El Moro (if you haven't)</li>
+        <li>Mole madre from Pujol OMAKASE bar</li>
+        <li>Galleta nuez from Odette Condesa</li>
+        <li>Ichigo matcha from San Matcha</li>
+        <li>Campechana from Orinoco</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Sticky tips at bottom of each day via a floating panel -->
+  <div class="section-label" style="margin-top: 48px;">Essential Notes</div>
+  <div class="quick-list">
+    <h3>Things to book before you arrive</h3>
+    <ul>
+      <li><strong>Frida Kahlo Museum</strong> — timed-entry, no walk-in sales, sells out weeks ahead. Buy at museofridakahlo.org.mx. Your ticket <strong>includes free entry to Anahuacalli Museum</strong>.</li>
+      <li><strong>Jardines de México</strong> — buy tickets at jardinesdemexico.com. Open Tue–Sun 9am–6pm, <strong>closed Mondays</strong>. Bring water; eat in Tequesquitengo nearby instead of on-site.</li>
+      <li><strong>Pujol</strong> — book weeks ahead at pujol.com.mx. DEGUSTACIÓN tasting menu ~$130. OMAKASE taco bar is more casual.</li>
+      <li><strong>Chapultepec Castle</strong> — buy online to skip the 2-hr queue. Open Tue–Sun 9am–5pm.</li>
+      <li><strong>Licorería Limantour</strong> — reservation recommended for evenings.</li>
+      <li><strong>Contramar</strong> — arrive 30 min before opening if no reservation.</li>
+      <li>Download the <strong>Metro CDMX app</strong> before arrival. Use <strong>Uber/Didi</strong> only — avoid unmarked taxis.</li>
+      <li><strong>Pack bags Tuesday night</strong> — Wednesday flight is at noon, leave the hotel by 9am.</li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+function showDay(id) {
+  document.querySelectorAll('.day-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
